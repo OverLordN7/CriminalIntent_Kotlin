@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.criminalintent_kotlin">
 
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+
     <application
         android:name=".CriminalIntentAplication"
         android:allowBackup="true"
@@ -23,6 +25,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.example.criminalintent_kotlin.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/files"/>
+
+        </provider>
+
     </application>
 
 </manifest>
