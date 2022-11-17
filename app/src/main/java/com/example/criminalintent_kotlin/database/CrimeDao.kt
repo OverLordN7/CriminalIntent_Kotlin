@@ -21,4 +21,7 @@ interface CrimeDao {
 
     @Insert
     fun addCrime(crime: Crime)
+
+    @Query("DELETE FROM crime WHERE id = (:id)")
+    fun deleteCrime(id:UUID)
 }

@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -63,6 +64,8 @@ class CrimeListFragment: Fragment() {
 
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
         crimeRecyclerView.adapter = adapter
+
+        enableSwipe()
 
         return view
     }
@@ -143,6 +146,11 @@ class CrimeListFragment: Fragment() {
             holder.bind(crime)
         }
 
+        fun deleteCrime(position: Int){
+            crimeListViewModel.deleteCrime(crimes[position])
+            notifyDataSetChanged()
+        }
+
         override fun getItemCount() = crimes.size
 
     }
@@ -150,5 +158,31 @@ class CrimeListFragment: Fragment() {
     private fun updateUI(crimes: List<Crime>){
         adapter = CrimeAdapter(crimes)
         crimeRecyclerView.adapter =adapter
+    }
+
+    private fun enableSwipe(){
+        val itemTouchCallback = object: ItemTouchHelper.SimpleCallback(0,
+            ItemTouchHelper.LEFT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position  = viewHolder.adapterPosition
+
+                if(direction == ItemTouchHelper.LEFT){
+                    Log.d(TAG,"Delete crime on position: $position")
+                    adapter!!.deleteCrime(position)
+                }
+            }
+
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(crimeRecyclerView)
     }
 }
